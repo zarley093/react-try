@@ -4,8 +4,8 @@ import './index.css';
 // import App from './App';
 // import MyApp from './MyApp';
 import reportWebVitals from './reportWebVitals';
-
-
+import Fruit from './Objects/Fruit'
+import Banana from './Objects/Banana'
 /**
  * ======================TYPESCRIPT====================, 
  * General declaration of variable should be "any", if variable is of general use.
@@ -20,6 +20,27 @@ import reportWebVitals from './reportWebVitals';
  * or "while-loop", it cannot be read. "var" declared variables do not have a block scope.
  * LET variable cannot be re-declared
  */
+
+const user = {
+  firstName: 'Zarley',
+  lastName: 'Vedad',
+};
+
+const props = {
+  name: 'Banana'
+}
+
+interface iFruit {
+  name: string,
+  texture: string,
+  taste: string,
+  price: number,
+  quantity: number,
+  total: () => string
+}
+
+let element:any
+
 function formatName(user:any) {
   let toReturn:string
   if (user === null) {
@@ -106,17 +127,6 @@ function UnionTypeVariableSample(...items:any[]) {
   return modifiedItems
 }
 
-const user = {
-  firstName: 'Zarley',
-  lastName: 'Vedad',
-};
-
-const props = {
-  name: 'Banana'
-}
-
-let element:any
-
 const sampleHtml = 
   <div className="m-4">
     <div className="m-2 bg-green-500">
@@ -144,6 +154,24 @@ const sampleHtml2 = (
   </h1>
 );
 
+const strawberry:iFruit = {
+  name: 'Strawberry',
+  texture: 'Juicy',
+  taste: 'Sour fragrant',
+  price: 4,
+  quantity: 10,
+  total: function () {return `Total price to pay is ${strawberry.price * strawberry.quantity}`}
+}
+
+const sampleHtml3 = (
+  <div>
+   <div>{strawberry.name}</div>
+   <div>{strawberry.texture}</div>
+   <div>{strawberry.taste}</div>
+   <div>{strawberry.total()}</div>
+  </div>
+)
+
 
 if (parseFloat(MathSample(2,3,'simpleDemo')) <= 10 ) {
   element = sampleHtml2
@@ -156,11 +184,14 @@ function FirstComponent(props:any) {
     <div className="m-2 bg-red-500">
       My First name (firstName) is, {props.firstName}!
     </div>
-    <div className="m-2 bg-blue-500">
+    <div className="m-2 bg-orange-500">
       My Last name (lastName) is, {props.lastName}
     </div>
-    <div className="m-2 bg-orange-500">
+    <div className="m-2 bg-yellow-500">
       Testing math, {props.math}
+    </div>
+    <div className="m-2 bg-yello-300">
+      Testing interface, {sampleHtml3}
     </div>
   </div>
 }
@@ -173,65 +204,165 @@ function SecondComponent() {
 
 element = <FirstComponent firstName="Zarley" lastName="Vedad" math={MathSample(1,2,'mathDemo')}/>
 
+interface IProps {
+}
 
-// class Clock extends React.Component <{}, {date: any, timerID: any,}> {
-//   constructor(props:any) {
-//     super(props);
-//     this.state = {date: new Date()};
-//   }
+interface IState {
+  isToggleOn: any
+  something: any
+}
 
-//   componentDidMount() {
-//     this.timerID = setInterval(
-//       () => this.tick(),
-//       1000
-//     );
-//   }
-
-//   componentWillUnmount() {
-//     clearInterval(this.timerID);
-//   }
-
-//   tick() {
-//     this.setState({
-//       date: new Date()
-//     });
-//   }
-
-//   render () {
-//     return (
-//       <div>
-//         <h1>Hello, world!</h1>
-//         <h2>It is {this.state.date.toLocaleTimeString()}.</h2>
-//       </div>
-//     );
-//   }
-// }
-
-class Toggle extends React.Component <{}, {isToggleOn: any}> {
+class Toggle extends React.Component <IProps, IState> {
   constructor(props:any) {
     super(props);
-    this.state = {isToggleOn: true};
+    this.state = {
+      isToggleOn: true,
+      something: 0,
+    };
 
     // This binding is necessary to make `this` work in the callback
     this.handleClick = this.handleClick.bind(this);
   }
 
-  handleClick() {
+  handleClick = () => {
     this.setState(state => ({
       isToggleOn: !state.isToggleOn
     }));
+    console.log('button is clicked')
+  }
+  handleClick2 = () => {
+    console.log('this is:', this);
+  }
+  change1 = () => {
+    console.log('Add item')
+    this.setState(state => ({
+      something: parseFloat(state.something) + 1
+    }));
+  }
+  
+  change2 = () => {
+    console.log('Deduct item')
+    this.setState((state) => ({
+      something: state.something-1
+    }))
+  }
+  render() {
+    return (
+      <div>
+        <div className="flex flex-row m-2">
+          <button 
+            className="m-2 p-2 rounded-lg bg-yellow-600 hover:bg-yellow-700" 
+            onClick={this.handleClick}
+          >
+            {this.state.isToggleOn ? 'ON' : 'OFF'}
+          </button>
+          <button 
+            className="m-2 p-2 rounded-lg bg-yellow-600 hover:bg-yellow-700" 
+            onClick={this.handleClick2}
+          >
+            Click me
+          </button>
+          <button 
+            className="m-2 p-2 rounded-lg bg-yellow-600 hover:bg-yellow-700"
+            onClick={this.change1}
+          >
+            Add
+          </button>
+          <button 
+            className="m-2 p-2 rounded-lg bg-yellow-600 hover:bg-yellow-700"
+            onClick={this.change2}
+          >
+            Deduct
+          </button>
+          
+        </div>
+        <div className="m-4 p-2 rounded-lg bg-orange-500">
+          Count State: {this.state.something}
+        </div>
+      </div>
+    );
+  }
+}
+
+function UserGreeting(props:any) {
+  return <h1>Welcome back!</h1>;
+}
+
+function GuestGreeting(props:any) {
+  return <h1>Please sign up.</h1>;
+}
+
+function LoginButton(props:any) {
+  return (
+    <button className="m-2 p-2 rounded-lg bg-orange-400 hover:bg-orange-500" onClick={props.onClick}>
+      Login
+    </button>
+  );
+}
+
+function LogoutButton(props:any) {
+  return (
+    <button className="m-2 p-2 rounded-lg bg-orange-400 hover:bg-orange-500" onClick={props.onClick}>
+      Logout
+    </button>
+  );
+}
+
+function Greeting(props:any) {
+  const isLoggedIn = props.isLoggedIn;
+  if (isLoggedIn) {
+    return <UserGreeting />;
+  }
+  return <GuestGreeting />;
+}
+
+class LoginControl extends React.Component <{}, {isLoggedIn:any} > {
+  constructor(props:any) {
+    super(props);
+    this.handleLoginClick = this.handleLoginClick.bind(this);
+    this.handleLogoutClick = this.handleLogoutClick.bind(this);
+    this.state = {isLoggedIn: false};
+  }
+
+  handleLoginClick() {
+    this.setState({isLoggedIn: true});
+  }
+
+  handleLogoutClick() {
+    this.setState({isLoggedIn: false});
   }
 
   render() {
+    const isLoggedIn = this.state.isLoggedIn;
+    let button;
+    if (isLoggedIn) {
+      button = <LogoutButton onClick={this.handleLogoutClick} />;
+    } else {
+      button = <LoginButton onClick={this.handleLoginClick} />;
+    }
+
     return (
-      <button 
-        className="p-2 rounded-lg bg-yellow-600 hover:bg-yellow-700" 
-        onClick={this.handleClick}
-      >
-        {this.state.isToggleOn ? 'ON' : 'OFF'}
-      </button>
+      <div>
+        <Greeting isLoggedIn={isLoggedIn} />
+        {button}
+      </div>
     );
   }
+}
+
+const messages = ['React', 'Re: React', 'Re:Re: React'];
+function Mailbox (props:any) {
+  const unreadMessages = props.unreadMessages;
+  return (
+    <div>
+      <h1>Hello!</h1>
+      {unreadMessages.length > 0 &&
+        <h2>
+          You have {unreadMessages.length} unread messages.
+        </h2>
+      }
+    </div>
+  );
 }
 
 function App () {
@@ -239,24 +370,31 @@ function App () {
     <div>
       <div className = "m-2 p-4 rounded-lg shadow-lg">
         This is the pre-component ; Treat this as the "Hello world" of this Typescript React Project.
+        Below is called an element.
         {element}
       </div>
       <div className="m-2 p-4 rounded-lg bg-yellow-300">
-        <p>This is the first component ; It features the utilization of the Basic Syntax</p>
+        <p>1st component ; It features the utilization of the Basic Syntax</p>
         <FirstComponent firstName="Zarley" lastName="Vedad" math={MathSample(3,4,'mathDemo')}/>
       </div>
 
       <div className="m-2 p-4 rounded-lg bg-green-300">
-        <p>This is the second component ; It features utilization of Functions</p>
+        <p>2nd component ; It features utilization of Functions</p>
         <SecondComponent/>
       </div>
       <div className="m-2 p-4 rounded-lg bg-blue-300">
-        <p>This is the third component ; It will feature utilization of Classes</p> 
-        {/* <Clock/>  */}
+        <p>3rd component ; It will feature utilization of OOP Concepts. Classes, Inheritance, etc</p> 
+        <Fruit/>
+        <Banana/>
       </div>
       <div className="m-2 p-4 rounded-lg bg-orange-300">
-        <p>This is the 4th component ; Features actions</p>
+        <p>4th component ; Features states, props and actions</p>
         <Toggle/>
+      </div>
+      <div className="m-2 p-4 rounded-lg bg-purple-300">
+        <p>5th component ; Features conditional Rendering</p>
+        <LoginControl/>
+        <Mailbox unreadMessages={messages} />
       </div>
     </div>
   )
