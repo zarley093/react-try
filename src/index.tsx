@@ -6,6 +6,7 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Fruit from './Objects/Fruit'
 import Banana from './Objects/Banana'
+import Reservation from './Objects/Reservation'
 /**
  * ======================TYPESCRIPT====================, 
  * General declaration of variable should be "any", if variable is of general use.
@@ -205,6 +206,9 @@ function SecondComponent() {
 element = <FirstComponent firstName="Zarley" lastName="Vedad" math={MathSample(1,2,'mathDemo')}/>
 
 interface IProps {
+  test1: string,
+  test2: number,
+  test3: string,
 }
 
 interface IState {
@@ -219,7 +223,6 @@ class Toggle extends React.Component <IProps, IState> {
       isToggleOn: true,
       something: 0,
     };
-
     // This binding is necessary to make `this` work in the callback
     this.handleClick = this.handleClick.bind(this);
   }
@@ -278,6 +281,12 @@ class Toggle extends React.Component <IProps, IState> {
         </div>
         <div className="m-4 p-2 rounded-lg bg-orange-500">
           Count State: {this.state.something}
+        </div>
+        <div className="m-4 p-2 rounded-lg bg-yellow-500">
+          Rendering props: 
+          <p>{this.props.test1}</p>
+          <p>{this.props.test2}</p>
+          <p>{this.props.test3}</p>
         </div>
       </div>
     );
@@ -365,6 +374,103 @@ function Mailbox (props:any) {
   );
 }
 
+const bookSeries = [
+  {
+    name: 'The Hunger Games',
+    publication_date: '2008'
+  },
+  {
+    name: 'The Hunger Games: Catching Fire',
+    publication_date: '2009'
+  },
+  {
+    name: 'The Hunger Gmaes: Mockingjay',
+    publication_date: '2010'
+  }
+]
+
+const bookSeriesWithId = [
+  {
+    id: 1,
+    name: 'Harry Potter and the Philosopher`s stone',
+    publication_date: '1997'
+  },
+  {
+    id: 2,
+    name: 'Harry Potter and the Chamber of Secrets',
+    publication_date: '1998'
+  },
+  {
+    id: 3,
+    name: 'Harry Potter and the Prisoner of Azkaban',
+    publication_date: '1999'
+  },
+  {
+    id: 4,
+    name: 'Harry Potter and the Goblet of Fire',
+    publication_date: '2000'
+  }
+]
+
+const listBookSeries = bookSeries.map((item, index) => {
+  return (
+    <div className='flex flex-row p-2 rounded-lg bg-gray-300 m-1'>
+      <div className="m-1">
+        Index: {index}
+      </div>
+      <div className="m-1">
+        {item.name}
+      </div>
+      <div className="m-1">
+        {item.publication_date}
+      </div>
+    </div>
+  )
+})
+
+function ListFunction(props:any) {
+  const items = props.items
+  console.log('in listfunction', items)
+  const listItems = items.map((item:any, index: number) => {
+    return (
+      <div className='flex flex-row p-2 rounded-lg bg-gray-300 m-1'>
+        {
+          item.id 
+          ? <div className="m-1">
+              {item.id}
+            </div> 
+          : <div className="m-1">
+            {index} (No Id)
+          </div>
+        }
+        
+        <div className="m-1">
+          {item.name}
+        </div>
+        <div className="m-1">
+          {item.publication_date}
+        </div>
+      </div>
+    )
+  })
+
+  return listItems
+}
+
+class Books extends React.Component <{books: any},{}> {
+  constructor(props: any) {
+    super(props)
+  }
+  
+  render () {
+    console.log('props in books component', this.props)
+    console.log('props in books component', this.props.books)
+    return (
+      this.props.books ? <ListFunction items={this.props.books}/> : null
+    )
+  }
+}
+
 function App () {
   return (
     <div>
@@ -389,27 +495,34 @@ function App () {
       </div>
       <div className="m-2 p-4 rounded-lg bg-orange-300">
         <p>4th component ; Features states, props and actions</p>
-        <Toggle/>
+        <Toggle test1='banana' test2={7} test3='hindi ko sure'/>
       </div>
-      <div className="m-2 p-4 rounded-lg bg-purple-300">
+      <div className="m-2 p-4 rounded-lg bg-indigo-300">
         <p>5th component ; Features conditional Rendering</p>
         <LoginControl/>
         <Mailbox unreadMessages={messages} />
+      </div>
+      <div className="m-2 p-4 rounded-lg bg-purple-300">
+        <p>6th component ; Features Listing</p>
+        <p>Rendering Array of elements thru variable</p>
+        {listBookSeries}
+        <p>Rendering Array of elements thru function</p>
+        <ListFunction items={bookSeries}/>
+        <p>Rendering Array of elements thru Component ; With IDs</p>
+        <Books books={bookSeriesWithId}/>
+      </div>
+      <div className="m-2 p-4 rounded-lg bg-green-300">
+        <p>7th component ; Features Forms</p>
+        <Reservation/>
       </div>
     </div>
   )
 }
 
-
 ReactDOM.render(
   <App/>, 
   document.getElementById('root')
 );
-
-
-
-
-
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
